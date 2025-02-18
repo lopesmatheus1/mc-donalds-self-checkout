@@ -19,7 +19,7 @@ model Restaurant {
   slug           String
   description    String
   avatarImageUrl String
-  coveerImageUrl String
+  coverImageUrl  String
   menuCategories MenuCategory[]
   product        Product[]
   orders         Order[]
@@ -30,7 +30,7 @@ model Restaurant {
 model MenuCategory {
   id           String     @id @default(uuid())
   name         String
-  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   restaurantId String
   product      Product[]
   createdAt    DateTime   @default(now())
@@ -44,9 +44,10 @@ model Product {
   price          Float
   imageUrl       String
   restaurantId   String
-  restaurant     Restaurant     @relation(fields: [restaurantId], references: [id])
+  ingredients    String[]
+  restaurant     Restaurant     @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   menuCategoryId String
-  menuCategory   MenuCategory   @relation(fields: [menuCategoryId], references: [id])
+  menuCategory   MenuCategory   @relation(fields: [menuCategoryId], references: [id], onDelete: Cascade)
   orderProducts  OrderProduct[]
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
@@ -58,7 +59,7 @@ model Order {
   orderProducts    OrderProduct[]
   status           OrderStatus
   restaurantId     String
-  restaurant       Restaurant       @relation(fields: [restaurantId], references: [id])
+  restaurant       Restaurant       @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   consuptionMethod ConsuptionMethod
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
@@ -67,9 +68,9 @@ model Order {
 model OrderProduct {
   id        String   @id @default(uuid())
   productId String
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   orderId   Int
-  order     Order    @relation(fields: [orderId], references: [id])
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   quantity  Int
   price     Float
   createdAt DateTime @default(now())

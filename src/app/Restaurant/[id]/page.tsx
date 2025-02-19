@@ -34,7 +34,7 @@ const ProductsByCategory = async ({
       {/* FOOD BY CATEGORY */}
       <h2 className="px-5 font-semibold">{products[0].menuCategory.name}</h2>
       <div className="p-5">
-        <div className="space-y-5">
+        <div className="space-y-5 h-full">
           {products.map((product) => (
             <ProductItem product={product} key={product.id} />
           ))}

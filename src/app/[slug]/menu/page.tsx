@@ -38,7 +38,7 @@ const RestaurantMenuPage = async ({
 
   return (
     <div className="h-screen w-full">
-      <RestaurantImage imageUrl={restaurant.coverImageUrl}/>
+      <RestaurantImage/>
 
       {<RestaurantDescription restaurant={restaurant} />}
 

@@ -22,7 +22,7 @@ const ProductPage = async ({ params: { id } }: ProductPageProps) => {
 
   if (!product) return notFound();
   return (
-    <div>
+    <div className="flex min-h-screen flex-col">
       <div className="relative h-[350px] w-full">
         <Image
           alt=""
@@ -33,7 +33,7 @@ const ProductPage = async ({ params: { id } }: ProductPageProps) => {
         />
       </div>
 
-      <div className="relative z-50 mt-[-1.5rem] h-full rounded-tl-3xl rounded-tr-3xl bg-white">
+      <div className="relative z-50 mt-[-1.5rem] flex-grow rounded-tl-3xl rounded-tr-3xl bg-white">
         <div className="space-y-1 p-5">
           <div className="flex items-center gap-2">
             <Avatar className="h-6 w-6">
@@ -88,12 +88,12 @@ const ProductPage = async ({ params: { id } }: ProductPageProps) => {
             </ul>
           </div>
         </div>
+      </div>
 
-        <div className="w-full p-5">
-          <Button className="w-full rounded-full bg-[#D52B1E] hover:bg-[#D52B1E]/80">
-            Adionar à sacola
-          </Button>
-        </div>
+      <div className="w-full p-5">
+        <Button className="w-full rounded-full bg-[#D52B1E] hover:bg-[#D52B1E]/80">
+          Adionar à sacola
+        </Button>
       </div>
     </div>
   );

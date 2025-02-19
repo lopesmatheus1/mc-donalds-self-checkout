@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import ProductItem from "./product-item";
 import { Button } from "./ui/button";
+import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 
 interface CategoryListProps {
   restaurant: Prisma.RestaurantGetPayload<{
@@ -30,27 +31,33 @@ const CategoryList = ({ restaurant }: CategoryListProps) => {
   };
   return (
     <>
-      <div className="flex gap-3 overflow-x-auto p-5 pt-0 [&::-webkit-scrollbar]:hidden">
-        <Button
-          variant={`${selectedCategoryIsUndefined() ? "default" : "outline"}`}
-          className={`rounded-full border border-muted-foreground/60 ${selectedCategoryIsUndefined() ? "text-white" : "text-muted-foreground hover:bg-primary hover:text-white"}`}
-          onClick={() => setSelectedCategory(undefined)}
-        >
-          Todos os produtos
-        </Button>
-        {restaurant?.menuCategories.map((category) => (
-          <Button
-            onClick={() => handleCategoryClick(category)}
-            key={category.id}
-            variant={`${categoryIsSelected(category) ? "default" : "outline"}`}
-            className={`rounded-full border border-muted-foreground/60 ${categoryIsSelected(category) ? "text-white" : "text-muted-foreground hover:bg-primary hover:text-white"}`}
-            size={"sm"}
-          >
-            {category.name}
-          </Button>
-        ))}
+      <div className="p-5 pt-0">
+        <ScrollArea>
+          <div className="flex w-max gap-2">
+            <Button
+              variant={`${selectedCategoryIsUndefined() ? "default" : "outline"}`}
+              className={`h-9 rounded-full border border-muted-foreground/60 ${selectedCategoryIsUndefined() ? "text-white" : "text-muted-foreground hover:bg-primary hover:text-white"}`}
+              onClick={() => setSelectedCategory(undefined)}
+              size={"sm"}
+            >
+              Todos os produtos
+            </Button>
+            {restaurant?.menuCategories.map((category) => (
+              <Button
+                onClick={() => handleCategoryClick(category)}
+                key={category.id}
+                variant={`${categoryIsSelected(category) ? "default" : "outline"}`}
+                className={`rounded-full border border-muted-foreground/60 ${categoryIsSelected(category) ? "text-white" : "text-muted-foreground hover:bg-primary hover:text-white"}`}
+                size={"sm"}
+              >
+                {category.name}
+              </Button>
+            ))}
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
-      
+
       {/* PRODUTOSSSS */}
       <h2 className="px-5 font-semibold">
         {selectedCategory?.name || "Todos os produtos"}

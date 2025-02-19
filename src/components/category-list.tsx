@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { db } from "@/lib/prisma";
 
 import CategoryItem from "./category-item";
@@ -9,9 +11,15 @@ const CategoryList = async () => {
     },
   });
   return (
-    <div className="flex gap-3 overflow-x-auto p-5 pt-0">
+    <div className="flex gap-3 overflow-x-auto p-5 pt-0 [&::-webkit-scrollbar]:hidden">
       {restaurant?.menuCategories.map((category) => (
-        <CategoryItem name={category.name} key={category.id} />
+        <Link href={`/restaurant/${category.id}`} key={category.id}>
+          <CategoryItem
+            id={category.id}
+            name={category.name}
+            key={category.id}
+          />
+        </Link>
       ))}
     </div>
   );

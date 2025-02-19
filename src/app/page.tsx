@@ -27,7 +27,7 @@ export default function Home() {
 
       {/* OPÇÕES */}
       <div className="flex w-full items-center justify-around px-5">
-        <Link href={"/"}>
+        <Link href={"/restaurant"}>
           <div className="flex w-40 flex-col items-center gap-8">
             <Image
               alt="Para comer aqui"
@@ -40,7 +40,7 @@ export default function Home() {
           </div>
         </Link>
 
-        <Link href={"/"}>
+        <Link href={"/restaurant"}>
           <div className="flex w-40 flex-col items-center gap-8">
             <Image
               alt="Para levar"

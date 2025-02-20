@@ -13,7 +13,7 @@ interface ProductImageProps {
 const ProductImage = ({ product }: ProductImageProps) => {
   const route = useRouter();
   return (
-    <div className="relative h-[350px] w-full">
+    <div className="relative min-h-[300px] w-full">
       <Image
         alt=""
         src={product?.imageUrl}
@@ -24,7 +24,7 @@ const ProductImage = ({ product }: ProductImageProps) => {
 
       <Button
         onClick={() => route.back()}
-        className="absolute left-5 top-5 h-10 w-10 rounded-full bg-white p-0 text-accent-foreground"
+        className="absolute left-5 top-5 h-10 w-10 rounded-full bg-white p-0 text-accent-foreground hover:bg-white"
       >
         <ChevronLeftIcon size={20} />
       </Button>

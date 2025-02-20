@@ -1,6 +1,7 @@
 import { Product } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 import { formatCurrency } from "@/helpers/formatCurrency";
 
@@ -9,9 +10,10 @@ interface ProductItemProps {
 }
 
 const ProductItem = ({ product }: ProductItemProps) => {
+  const { slug } = useParams<{ slug: string }>();
   return (
     <div>
-      <Link href={`/product/${product.id}`}>
+      <Link href={`/${slug}/menu/${product.id}`}>
         <div className="flex w-full items-center justify-between">
           <div className="pr-3">
             <h2 className="w-48 truncate text-sm font-medium">

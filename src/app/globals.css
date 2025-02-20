@@ -36,7 +36,8 @@
   * {
     @apply border-border;
   }
-  body {
-    @apply h-screen bg-background text-foreground;
+  body,
+  html {
+    @apply h-full bg-background text-foreground;
   }
 }

@@ -12,13 +12,21 @@ import { formatCurrency } from "@/helpers/formatCurrency";
 
 interface ProductDescriptionProps {
   product: Prisma.ProductGetPayload<{
-    include: { restaurant: true };
+    include: {
+      restaurant: {
+        select: {
+          avatarImageUrl: true;
+          name: true;
+        };
+      };
+    };
   }>;
 }
 
 const ProductDescription = ({ product }: ProductDescriptionProps) => {
   const [quantity, setQuantity] = useState<number>(1);
-  const { addProductsToCart } = useContext(CartContext);
+  const { addProductsToCart, cartIsOpen, handleOpenOrCloseCart } =
+    useContext(CartContext);
 
   const handleDecreaseQuantityClick = () => {
     if (quantity <= 1) return setQuantity(1);
@@ -30,7 +38,8 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
 
   return (
     <>
-      <div className="relative z-50 mt-[-1.5rem] flex-grow rounded-tl-3xl rounded-tr-3xl bg-white">
+      <div className="relative z-50 mt-[-1.5rem] flex-auto rounded-tl-3xl rounded-tr-3xl bg-white">
+        {/* RESTAURANTE */}
         <div className="space-y-1 p-5">
           <div className="flex items-center gap-2">
             <Avatar className="h-6 w-6">
@@ -41,6 +50,7 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
             </p>
           </div>
 
+          {/* NOME DO PRODUTO */}
           <h2 className="text-lg font-semibold">{product.name}</h2>
           <div className="flex w-full justify-between">
             <p className="text-xl font-semibold">
@@ -68,6 +78,7 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
           </div>
         </div>
 
+        {/* DESCRICAO */}
         <div className="p-5 py-6">
           <p className="font-semibold">Sobre</p>
           <span className="text-sm text-muted-foreground">
@@ -75,26 +86,32 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
           </span>
         </div>
 
-        <div className="px-5">
-          <div className="flex items-center gap-1 pb-2 font-semibold">
-            <ChefHatIcon size={18} />
-            <p>Ingredientes</p>
-          </div>
+        {/* INGREDIENTES */}
+        {product.ingredients.length > 0 && (
+          <div className="px-5">
+            <div className="flex items-center gap-1 pb-2 font-semibold">
+              <ChefHatIcon size={18} />
+              <p>Ingredientes</p>
+            </div>
 
-          <div>
-            <ul className="list-disc px-5">
-              {product.ingredients.map((ingredient) => (
-                <li key={ingredient} className="text-sm text-muted-foreground">
-                  {ingredient}
-                </li>
-              ))}
-            </ul>
+            <div>
+              <ul className="list-disc px-5">
+                {product.ingredients.map((ingredient) => (
+                  <li
+                    key={ingredient}
+                    className="text-sm text-muted-foreground"
+                  >
+                    {ingredient}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className="w-full p-5">
-        <Sheet>
+        <Sheet open={cartIsOpen} onOpenChange={handleOpenOrCloseCart}>
           <SheetTrigger asChild>
             <Button
               onClick={() => addProductsToCart({ ...product, quantity })}

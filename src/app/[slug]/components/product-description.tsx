@@ -25,8 +25,7 @@ interface ProductDescriptionProps {
 
 const ProductDescription = ({ product }: ProductDescriptionProps) => {
   const [quantity, setQuantity] = useState<number>(1);
-  const { addProductsToCart, cartIsOpen, handleOpenOrCloseCart } =
-    useContext(CartContext);
+  const { addProductsToCart, cartIsOpen, toggleCart } = useContext(CartContext);
 
   const handleDecreaseQuantityClick = () => {
     if (quantity <= 1) return setQuantity(1);
@@ -111,7 +110,7 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
       </div>
 
       <div className="w-full p-5">
-        <Sheet open={cartIsOpen} onOpenChange={handleOpenOrCloseCart}>
+        <Sheet open={cartIsOpen} onOpenChange={toggleCart}>
           <SheetTrigger asChild>
             <Button
               onClick={() => addProductsToCart({ ...product, quantity })}

@@ -1,10 +1,17 @@
 "use client";
 import { Prisma } from "@prisma/client";
-import { createContext, ReactNode, useMemo, useState } from "react";
+import { createContext, ReactNode, useEffect, useMemo, useState } from "react";
 
 interface CartProduct
   extends Prisma.ProductGetPayload<{
-    include: { restaurant: true };
+    include: {
+      restaurant: {
+        select: {
+          avatarImageUrl: true;
+          name: true;
+        };
+      };
+    };
   }> {
   quantity: number;
 }
@@ -16,6 +23,9 @@ interface ICartContext {
   increaseQuantityToProduct: (id: string) => void;
   decreaseQuantityToProduct: (id: string) => void;
   total: number;
+  toggleCart: () => void;
+  cartIsOpen: boolean;
+  totalProductQuantity: number;
 }
 
 export const CartContext = createContext<ICartContext>({
@@ -25,14 +35,34 @@ export const CartContext = createContext<ICartContext>({
   removeFromCart: () => {},
   increaseQuantityToProduct: () => {},
   decreaseQuantityToProduct: () => {},
+  toggleCart: () => {},
+  cartIsOpen: false,
+  totalProductQuantity: 0,
 });
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartProducts, setCartProducts] = useState<CartProduct[]>([]);
+  const [cartIsOpen, setCartIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (cartProducts.length === 0) {
+      setCartIsOpen(false);
+    }
+  }, [cartProducts]);
+
+  const toggleCart = () => {
+    setCartIsOpen(!cartIsOpen);
+  };
 
   const total = useMemo(() => {
     return cartProducts.reduce((acc, cartProduct) => {
       return acc + cartProduct.price * cartProduct.quantity;
+    }, 0);
+  }, [cartProducts]);
+
+  const totalProductQuantity = useMemo(() => {
+    return cartProducts.reduce((acc, cartProducts) => {
+      return acc + cartProducts.quantity;
     }, 0);
   }, [cartProducts]);
 
@@ -95,10 +125,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     <CartContext.Provider
       value={{
         cartProducts,
+        cartIsOpen,
+        totalProductQuantity,
         addProductsToCart,
         removeFromCart,
         decreaseQuantityToProduct,
         increaseQuantityToProduct,
+        toggleCart,
         total,
       }}
     >

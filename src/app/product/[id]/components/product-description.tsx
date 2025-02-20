@@ -1,18 +1,13 @@
 "use client";
-import { Prisma, Product } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { ChefHatIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
-import SideBarProductItem from "@/components/sidebar-product-item";
+import CartSheetContent from "@/components/cart-sheet-content";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetTrigger } from "@/components/ui/sheet";
+import { CartContext } from "@/context/cart";
 import { formatCurrency } from "@/helpers/formatCurrency";
 
 interface ProductDescriptionProps {
@@ -23,7 +18,7 @@ interface ProductDescriptionProps {
 
 const ProductDescription = ({ product }: ProductDescriptionProps) => {
   const [quantity, setQuantity] = useState<number>(1);
-  const [products, setProducts] = useState<Product[]>([]);
+  const { addProductsToCart } = useContext(CartContext);
 
   const handleDecreaseQuantityClick = () => {
     if (quantity <= 1) return setQuantity(1);
@@ -102,25 +97,13 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
         <Sheet>
           <SheetTrigger asChild>
             <Button
-              onClick={() => setProducts(products.concat(product))}
+              onClick={() => addProductsToCart({ ...product, quantity })}
               className="w-full rounded-full bg-[#D52B1E] hover:bg-[#D52B1E]/80"
             >
               Adionar à sacola
             </Button>
           </SheetTrigger>
-          <SheetContent className="w-[90%]">
-            <SheetHeader>
-              <SheetTitle className="text-left">Sacola</SheetTitle>
-
-              {products.map((product, i) => (
-                <SideBarProductItem
-                  quantity={quantity}
-                  product={product}
-                  key={product.id + i}
-                />
-              ))}
-            </SheetHeader>
-          </SheetContent>
+          <CartSheetContent />
         </Sheet>
       </div>
     </>

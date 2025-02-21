@@ -1,8 +1,10 @@
-import { useContext } from "react";
+"use client";
+import { useContext, useState } from "react";
 
 import { CartContext } from "@/context/cart";
 import { formatCurrency } from "@/helpers/formatCurrency";
 
+import FinishOrderDialog from "./finish-order-dialog";
 import SideBarProductItem from "./sidebar-product-item";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
@@ -11,6 +13,7 @@ import { SheetContent, SheetHeader, SheetTitle } from "./ui/sheet";
 
 const CartSheetContent = () => {
   const { cartProducts, total } = useContext(CartContext);
+  const [finishOrderDialogIsOpen, setFinishOrderDialogIsOpen] = useState(false);
   return (
     <SheetContent className="flex h-full w-[90%] flex-col">
       <SheetHeader>
@@ -57,7 +60,16 @@ const CartSheetContent = () => {
             </CardContent>
           </Card>
           <div className="mt-4">
-            <Button className="w-full bg-[#D52B1E]">Finalizar compra</Button>
+            <FinishOrderDialog
+              open={finishOrderDialogIsOpen}
+              onOpenChange={setFinishOrderDialogIsOpen}
+            />
+            <Button
+              onClick={() => setFinishOrderDialogIsOpen(true)}
+              className="w-full bg-[#D52B1E]"
+            >
+              Finalizar compra
+            </Button>
           </div>
         </div>
       </div>

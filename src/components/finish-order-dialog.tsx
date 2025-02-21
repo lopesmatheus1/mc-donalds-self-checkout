@@ -1,9 +1,15 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ConsuptionMethod } from "@prisma/client";
+import { Loader2Icon } from "lucide-react";
+import { useParams, useSearchParams } from "next/navigation";
+import { useContext, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
+import { toast } from "sonner";
 import { z } from "zod";
 
+import { createOrder } from "@/actions/create-order";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,6 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { CartContext } from "@/context/cart";
 import { isValidCpf } from "@/helpers/IsValidCpf";
 
 import {
@@ -53,6 +60,11 @@ interface FinishOrderDialogProps {
 }
 
 const FinishOrderDialog = ({ onOpenChange, open }: FinishOrderDialogProps) => {
+  const searchParams = useSearchParams();
+  const { cartProducts, setCartProducts } = useContext(CartContext);
+  const { slug } = useParams<{ slug: string }>();
+  const [isPending, startTransition] = useTransition();
+
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     shouldUnregister: true,
@@ -63,7 +75,24 @@ const FinishOrderDialog = ({ onOpenChange, open }: FinishOrderDialogProps) => {
   });
 
   const onSubmit = (data: FormSchema) => {
-    console.log(data);
+    const consumptionMethod = searchParams.get(
+      "consumptionMethod",
+    ) as ConsuptionMethod;
+    try {
+      startTransition(async () => {
+        await createOrder({
+          customerName: data.name,
+          customerCpf: data.cpf,
+          consumptionMethod,
+          products: cartProducts,
+          slug,
+        });
+        toast.success("Pedido realizado com sucesso!");
+        setCartProducts([]);
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -114,7 +143,12 @@ const FinishOrderDialog = ({ onOpenChange, open }: FinishOrderDialogProps) => {
                 )}
               />
               <DrawerFooter>
-                <Button type="submit" className="rounded-full bg-[#D52B1E]">
+                <Button
+                  disabled={isPending}
+                  type="submit"
+                  className="rounded-full bg-[#D52B1E]"
+                >
+                  {isPending && <Loader2Icon className="animate-spin" />}
                   Finalizar
                 </Button>
                 <DrawerClose asChild>

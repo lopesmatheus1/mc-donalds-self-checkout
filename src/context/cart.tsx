@@ -26,6 +26,7 @@ interface ICartContext {
   toggleCart: () => void;
   cartIsOpen: boolean;
   totalProductQuantity: number;
+  setCartProducts: React.Dispatch<React.SetStateAction<CartProduct[]>>;
 }
 
 export const CartContext = createContext<ICartContext>({
@@ -38,6 +39,7 @@ export const CartContext = createContext<ICartContext>({
   toggleCart: () => {},
   cartIsOpen: false,
   totalProductQuantity: 0,
+  setCartProducts: () => {},
 });
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
@@ -127,6 +129,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         cartProducts,
         cartIsOpen,
         totalProductQuantity,
+        setCartProducts,
         addProductsToCart,
         removeFromCart,
         decreaseQuantityToProduct,

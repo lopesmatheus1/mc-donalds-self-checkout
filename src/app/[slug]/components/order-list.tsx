@@ -37,6 +37,10 @@ const getStatusLabel = (status: OrderStatus) => {
       return "Cancelado";
     case "PREPARING":
       return "Em preparo";
+    case "PAYMENT_CONFIRMED":
+      return "Pagamento confirmado";
+    case "PAYMENT_FAILED":
+      return "Pagamento falhou";
   }
 };
 
@@ -48,7 +52,7 @@ const OrderList = ({ orders }: OrderListProps) => {
           <CardContent className="space-y-4 rounded-md border border-muted-foreground/30 p-5">
             <div>
               <Badge
-                className={`${order.status === OrderStatus.FINISHED ? "bg-green-500 text-white" : "bg-gray-200 text-gray-500"}`}
+                className={`${["PAYMENT_CONFIRMED", "FINISHED"].includes(order.status) ? "bg-green-500 text-white" : "bg-gray-200 text-gray-500"}`}
               >
                 {getStatusLabel(order.status)}
               </Badge>

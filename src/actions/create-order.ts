@@ -1,7 +1,7 @@
 "use server";
 
 import { ConsuptionMethod } from "@prisma/client";
-import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 import { removeCpfPunctuation } from "@/helpers/IsValidCpf";
 import { db } from "@/lib/prisma";
@@ -42,7 +42,7 @@ export const createOrder = async (input: CreateOrderProps) => {
     price: productsWithPrices.find((p) => p.id === product.id)!.price,
   }));
 
-  await db.order.create({
+  const order = await db.order.create({
     data: {
       consuptionMethod: input.consumptionMethod,
       status: "PENDING",
@@ -59,7 +59,6 @@ export const createOrder = async (input: CreateOrderProps) => {
       restaurantId: restarurant?.id,
     },
   });
-  redirect(
-    `/${input.slug}/orders?cpf=${removeCpfPunctuation(input.customerCpf)}`,
-  );
+  revalidatePath(`/${input.slug}/orders`);
+  return order;
 };

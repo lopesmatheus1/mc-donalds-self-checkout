@@ -2,7 +2,7 @@
 import { Prisma } from "@prisma/client";
 import { createContext, ReactNode, useEffect, useMemo, useState } from "react";
 
-interface CartProduct
+export interface CartProduct
   extends Prisma.ProductGetPayload<{
     include: {
       restaurant: {

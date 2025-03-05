@@ -26,6 +26,7 @@ const RestaurantImage = () => {
       <Button
         className="absolute right-5 top-5 h-10 w-10 rounded-full bg-white p-0"
         variant="ghost"
+        onClick={() => route.push("/fsw-donalds/orders")}
       >
         <ScrollText size={20} />
       </Button>
